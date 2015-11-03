@@ -1,0 +1,6 @@
+ENV['PEM'] = './features/step_definitions/PemFile/FoxtelEBS-27.pem'
+ENV['Instance'] = 'ec2-54-219-65-198.us-west-1.compute.amazonaws.com'
+ENV['User'] = 'ec2-user'
+ENV['API'] = 'Rid2MyOg0W6kYaXu7DZa2kNp4TGp.eoufi'
+ENV['Secret'] = 'NYlcAlHQirF9qBHalLuu0rEBlqG_KrSDlPxXA5Mj'
+ENV['LogFile'] = '/opt/ooyala/foxtel-ingestor/current/logs/log_orchestrator.txt'

@@ -1,0 +1,15 @@
+Types of errors 
+
+________________________________________________________________________________________________________________________
+Both HD and SD files are removed from queue  (Added code to handle this scenario)
+________________________________________________________________________________________________________________________
+E, [2015-11-02T05:09:06.121539 #28671] ERROR -- : (Ditto): Halted Asset processing in state BPUploadXMLToCMS msg:Failed movie_asset.xml with response code 400: 
+<?xml version="1.0"?>
+<problem>
+  <title>Failed to save data</title>
+  <problemType>http://httpstatus.es/400</problemType>
+  <httpStatus>400</httpStatus>
+  <detail>SQLSTATE[40001]: Serialization failure: 1213 Deadlock found when trying to get lock; try restarting transaction</detail>
+</problem>
+, backtrace:["/opt/ooyala/foxtel-ingestor/current/modules/bigpond/ingestor/states/upload_xml_to_cms.rb:69:in `run'", "/opt/ooyala/foxtel-ingestor/current/core/state_machine/state_machine.rb:27:in `block (2 levels) in run'", "/opt/ooyala/foxtel-ingestor/current/core/state_machine/state_machine.rb:22:in `loop'", "/opt/ooyala/foxtel-ingestor/current/core/state_machine/state_machine.rb:22:in `block in run'"]
+________________________________________________________________________________________________________________________
