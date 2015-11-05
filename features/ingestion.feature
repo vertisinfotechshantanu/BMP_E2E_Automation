@@ -6,6 +6,6 @@ Scenario: Ingest XML file using Ingest Adapter
 	Then create the final HASH
 
 	
-	3Then check data
+	#Then check data
 
 
