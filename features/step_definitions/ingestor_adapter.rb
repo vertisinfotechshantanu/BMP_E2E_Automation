@@ -4,7 +4,7 @@ require 'logger'
 require 'ooyala-v2-api'
 require 'JSON'
 
-Given(/^crete new XML set$/) do
+Given(/^create new XML set$/) do
   testXML = E2E.new
   testXML.crete_xml
 end
@@ -27,8 +27,9 @@ end
 # This class contains code for Ingestion process
 class E2E
   # This function creates XML file to upload on AWS watchfolder using predefined tamplate XMLs
+  # This function uses 'gsub' function to create XML set. We have used 'Time.now.strftime('%s')' to generate 
+  # unique ids like assetId, ProgrammeId, packageId, showId and groupId.
   def crete_xml
-    puts "Shantanu please change instance to EBS-27"
     flag = 0
     $file_array.each do |file|
       $replace = Time.now.strftime('%s') if flag % 3 == 0
@@ -48,6 +49,8 @@ class E2E
   end
 
   # This function uploads created XML files to the AWS watchfolder and starts the ingestor
+  # We have used net-ssh and net-scp to move generated files to AWS watchfolder and start ingestor.
+  # After starting ingestor it will give call to do_tail method to monitor the ingestion process.
   def ssh_AWS
     scp = Net::SCP.start("#{ENV['Instance']}", "#{ENV['User']}", :keys => ["#{ENV['PEM']}"])
     # link used http://stackoverflow.com/questions/14658363/proxy-tunnel-through-multiple-systems-with-ruby-netssh
@@ -59,12 +62,14 @@ class E2E
       session.exec!("sudo rm -rf #{ENV['LogFile']}")
       session.exec!('sudo /etc/init.d/ingestadapter restart')
       sleep 5
-      #session.exec!("sudo mv /home/ec2-user/*.xml #{ENV['WatchFolder']}" )
+      session.exec!("sudo mv /home/ec2-user/*.xml #{ENV['WatchFolder']}" )
       do_tail session, "#{ENV['LogFile']}"
     end
   end
 
-  # This function tails the log file and displays the Ingestion progress on the console 
+  # This function tails the log file and displays the Ingestion progress on the console.
+  # When all the assets are ingested then it will stop tailing the log file and will pull values of assets Ids and 
+  # embed code.
   def do_tail (session, file)
     temp_hash = {}
     session.open_channel do |channel|
@@ -87,7 +92,8 @@ class E2E
     end
   end
 
-  # This function will create HASH file from predefined XML files and values from ingested assets
+  # This function will create HASH file from predefined XML files and values from ingested assets.
+  # This methods also uses all 'gsub' function to generate HASH from generated XML files.
   def create_hash
     flag = 0
     $file_array.each do |file1|
@@ -148,7 +154,10 @@ class E2E
     check_data
   end
 
-  # This function will check data for any garbage value or removes programme ids which are not ingested completely
+  # This function will check data for any garbage value or removes programme ids which are not ingested completely.
+  # This function uses HASH generate in above methods to generate valid data. Also it will check asset status in the 
+  # Backlot. If status is not live in the Backlot then it will use ooyala-v2-api gem to change the status of assets 
+  # to live.
   def check_data
     @api = Ooyala::API.new("#{ENV['API']}", "#{ENV['Secret']}")
     $bmp_element1[:programeIds].each do |key|
@@ -194,8 +203,9 @@ class E2E
     end
   end
 
+  # This function will clear the screen when new log is added in the log file.
   def clear_screen(len)
-    (system 'clear')
+    system 'clear'
     puts "Error count is #{$error_count}"
     puts "Warning  count is #{$warning_count}"
     puts "Number of assets ingested : #{len}"

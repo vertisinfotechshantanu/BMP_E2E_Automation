@@ -1,7 +1,7 @@
 Feature: Ingestion process
 
 Scenario: Ingest XML file using Ingest Adapter
-	Given crete new XML set
+	Given create new XML set
 	Then ssh to the instance
 	Then create the final HASH
 
