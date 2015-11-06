@@ -42,7 +42,7 @@
             <AspectRatio>4x3</AspectRatio>
             <Sound>Stereo</Sound>
             <Files base="">
-                <File bitrate="50000000" width="720" height="576" assetId="1446718641" filename="003.mxf" contentType="application/mxf" fileSize="25181680"/>
+                <File bitrate="50000000" width="720" height="576" assetId="1446729179" filename="003.mxf" contentType="application/mxf" fileSize="25181680"/>
             </Files>
         </Video>
     </Videos>

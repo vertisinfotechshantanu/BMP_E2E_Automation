@@ -28,6 +28,7 @@ end
 class E2E
   # This function creates XML file to upload on AWS watchfolder using predefined tamplate XMLs
   def crete_xml
+    puts "Shantanu please change instance to EBS-27"
     flag = 0
     $file_array.each do |file|
       $replace = Time.now.strftime('%s') if flag % 3 == 0
@@ -58,7 +59,7 @@ class E2E
       session.exec!("sudo rm -rf #{ENV['LogFile']}")
       session.exec!('sudo /etc/init.d/ingestadapter restart')
       sleep 5
-      session.exec!('sudo mv /home/ec2-user/*.xml /mnt/ingestion_media/Samples')
+      #session.exec!("sudo mv /home/ec2-user/*.xml #{ENV['WatchFolder']}" )
       do_tail session, "#{ENV['LogFile']}"
     end
   end

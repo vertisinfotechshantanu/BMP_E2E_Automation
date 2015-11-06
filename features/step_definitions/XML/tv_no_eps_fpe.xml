@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<FeatureExport xmlns="http://bigpondmovies.com/schemas/ccms/ingest/1/0" packageId="1446718642" schemaVersion="1.0.1" origin="MPS" publishedDate="2015-06-15T16:30:00.000Z">
+<FeatureExport xmlns="http://bigpondmovies.com/schemas/ccms/ingest/1/0" packageId="1446729180" schemaVersion="1.0.1" origin="MPS" publishedDate="2015-06-15T16:30:00.000Z">
     <Header>
         <ExhibitionWindow start="2006-01-01T11:00:00.000Z" end="2021-01-01T11:00:00.000Z" expiry="2021-01-01T11:00:00.000Z" offerType="PPV-Promotion-DoublePack"/>
         <Destinations>
@@ -33,8 +33,8 @@
            </Destinations>
         </Header>
     <Feature>
-        <Description showID="1446718643" category="TV_NO_EPS" programmeId="1446718642" providerId="SON1">
-            <Title>E2EAutomationAssetTvNoEps_1446718642</Title>
+        <Description showID="1446729180" category="TV_NO_EPS" programmeId="1446729180" providerId="SON1">
+            <Title>E2EAutomationAssetTvNoEps_1446729180</Title>
             <ShortSynopsis>An experiment in advanced weather technology has turned farmland </ShortSynopsis>
             <LongSynopsis>An experiment in advanced weather technology has turned a desert canyon into fertile farmland </LongSynopsis>
             <VideoFormats>
@@ -56,7 +56,7 @@
                     <Credit role="Writer"><Person>Kanitkar Sir</Person></Credit>
 		</Credits>
             </Production>
-            <SeasonNumber>468</SeasonNumber>
+            <SeasonNumber>457</SeasonNumber>
         </Description>
     </Feature>
     <Media>
@@ -66,7 +66,7 @@
                 <AspectRatio>4x3</AspectRatio>
                 <Sound>Stereo</Sound>
                 <Files base="">
-                    <File bitrate="50000000" width="720" height="576" assetId="1446718642" filename="003.mxf" contentType="application/mxf" fileSize="25181680"/>
+                    <File bitrate="50000000" width="720" height="576" assetId="1446729180" filename="003.mxf" contentType="application/mxf" fileSize="25181680"/>
                 </Files>
             </Video>
             <Video class="trailer">
@@ -74,7 +74,7 @@
                     <AspectRatio>16x9</AspectRatio>
                     <Sound>Stereo</Sound>
                     <Files base="">
-                        <File height="576" width="720" assetId="1446718642_T" fileSize="25181680" contentType="application/gxf" filename="003.mxf" framerate="25" bitrate="1246078512"/>
+                        <File height="576" width="720" assetId="1446729180_T" fileSize="25181680" contentType="application/gxf" filename="003.mxf" framerate="25" bitrate="1246078512"/>
                     </Files>
             </Video>
         </Videos>
