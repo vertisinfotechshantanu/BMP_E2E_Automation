@@ -29,11 +29,13 @@ class E2E
   # This function creates XML file to upload on AWS watchfolder using predefined tamplate XMLs
   # This function uses 'gsub' function to create XML set. We have used 'Time.now.strftime('%s')' to generate 
   # unique ids like assetId, ProgrammeId, packageId, showId and groupId.
+  $bmp_element1 =  {:assetIds=>{":1448352581_SD"=>"1weTUzeTpDJHRfuPDE6r_NwtA8luE5AI", ":1448352581_HD"=>"1yeTUzeTpo-bg14vOi0NRawe1qSDPsCE", ":1448352581_T_SD"=>"12eTUzeTqCSLvSyDiENxjZXMGwabeOE8", ":1448352582_T_SD"=>"wzMTYzeTpcGUhJHK4u9VjFqtG-bkmoZf", ":1448352582_SD"=>"E3MTYzeTpo1TU33MU6nqgGstgnsU3_D3", ":1448352582_HD"=>"E1MTYzeTpZv06Q4QZeMBZOSqMBWeAHHN"}}
   def crete_xml
     flag = 0
+   
     $file_array.each do |file|
       $replace = Time.now.strftime('%s') if flag % 3 == 0
-      puts "value of $replace is #{$replace}"
+      # puts "value of $replace is #{$replace}"
       thiz = File.read("#{file}")
       if file.include?('trailer')
         flag += 1
@@ -71,19 +73,27 @@ class E2E
   # When all the assets are ingested then it will stop tailing the log file and will pull values of assets Ids and 
   # embed code.
   def do_tail (session, file)
-    temp_hash = {}
+    temp_hash_asset = {}
+    temp_hash_offre = {}
     session.open_channel do |channel|
       channel.on_data do |_ch, data|
-        data.gsub(%r{\d+_\w+}).each { |key| temp_hash[":#{key}"] = JSON.parse(data.split('body:')[1])['embedCode'] } if data.include?('Sending embed code to CMS with body:')
+        if data.include?('Sending embed code to CMS with body:')
+          data.gsub(%r{\d+_\w+}).each do |key| 
+            temp_hash_asset[":#{key}"] = JSON.parse(data.split('body:')[1])['embedCode'] 
+            temp_hash_offre[":#{key}"] = 0
+          end
+        end
+           
         if (data.include?('ERROR -- :') && data.include?('Halted Asset')) || data.include?('Retries left: 0')
           $error_count += 1
           $error_count += 1 if data.include?('Halted Asset') && data.include?('BPUploadXMLToCMS') && data.include?('asset.xml')
         elsif data.include?('WARN -- :')
            $warning_count += 1
         end
-        clear_screen temp_hash.length
-        if (temp_hash.length + $error_count) == $file_array.length
-          $bmp_element1[:assetIds] = temp_hash
+        clear_screen temp_hash_asset.length
+        if (temp_hash_asset.length + $error_count) == $file_array.length
+          $bmp_element1[:assetIds] = temp_hash_asset
+          $bmp_element1[:offerIds] = temp_hash_offre
           channel.close
           session.exec!('sudo /etc/init.d/ingestadapter restart')
         end
@@ -106,7 +116,7 @@ class E2E
         file.gsub(%r{end="\d+-\d+-\d+T\d+:\d+:\d+.\d+Z}).each { |key| $bmp_element[:end_date] = key.split('"')[1] }
         file.gsub(%r{offerType="\w+-\w+-\w+}).each { |key| $bmp_element[:offerType] = key.split('"')[1] }
         file.gsub(%r{deviceId="\w+"}).each { |key| supported_device << key.split('"')[1] }
-        $bmp_element[:deviceId] = supported_device
+        $bmp_element[:Devices] = supported_device
         file.gsub(%r{showID="\d+"}).each { |key| $bmp_element[:showID] = key.split('"')[1] }
         file.gsub(%r{category="\w+"}).each { |key| $bmp_element[:category] = key.split('"')[1] }
         file.gsub(%r{programmeId="\d+"}).each do |key|
@@ -120,7 +130,7 @@ class E2E
         $bmp_element[:VideoFormat] = videoFormat
         file.gsub(%r{<Genre main=\"1\" sub=\"2\">\w+:\w+</Genre>}).each { |key| $bmp_element[:genre] = key.split('>')[1].split('<')[0] }
         file.gsub(%r{<ParentalRating>\w+</ParentalRating>}).each { |key| $bmp_element[:MaturityRating] = key.split('>')[1].split('<')[0] }
-        file.gsub(%r{<Subtitled>\w+</Subtitled>}).each { |key| $bmp_element[:Subtitled] = key.split('>')[1].split('<')[0] }
+        file.gsub(%r{<Subtitled>\d+</Subtitled>}).each { |key| $bmp_element[:Subtitle] = key.split('>')[1].split('<')[0] }
         file.gsub(%r{<Year>\d+</Year>}).each { |key| $bmp_element[:Year] = key.split('>')[1].split('<')[0] }
         file.gsub(%r{<Colour>\w+</Colour>}).each { |key| $bmp_element[:Colour] = key.split('>')[1].split('<')[0] }
         file.gsub(%r{<Languages>\w+</Languages>}).each { |key| $bmp_element[:Languages] = key.split('>')[1].split('<')[0] }
@@ -130,6 +140,7 @@ class E2E
         file.gsub(%r{<Credit role=\"Writer\"><Person>\w+ \w+</Person>}).each { |key| $bmp_element[:Writer] = key.split('"')[2].split('>')[2].split('<')[0] }
         file.gsub(%r{<SeasonNumber>\d+</SeasonNumber>}).each { |key| $bmp_element[:SeasonNumber] = key.split('>')[1].split('<')[0] }
         file.gsub(%r{<EpisodeNumber>\d+</EpisodeNumber>}).each { |key| $bmp_element[:EpisodeNumber] = key.split('>')[1].split('<')[0] }
+        file.gsub(%r{<Parameter name="rentalHours">\d+</Parameter>}).each {|key| $bmp_element[:ViewingPeriod] = key.split('>')[1].split('<')[0]}
         file.gsub(%r{<EpisodeTitle>\w+\w+</EpisodeTitle>}).each { |key| $bmp_element[:EpisodeTitle] = key.split('>')[1].split('<')[0] }
         file.gsub(%r{<ShortSynopsis>[\w+\s*\w+]*</ShortSynopsis>}).each { |key| $bmp_element[:ShortSynopsis] = key.split('>')[1].split('<')[0] }
         file.gsub(%r{<LongSynopsis>[\w+\s*\w+]*</LongSynopsis>}).each { |key| $bmp_element[:LongSynopsis] = key.split('>')[1].split('<')[0] }
@@ -144,14 +155,24 @@ class E2E
         file.gsub(%r{assetId="\d+_T"}).each { |key| $bmp_element[:trailerId] = key.split('"')[1].split('"')[0] }
       end
       if flag == 3
+        # temp = {}
         $bmp_element1[:programeIds] = $progid
+        # $bmp_element1[:assetIds].each do |key|
+        #  temp[key[0]] =  key[1] if key[0].include?($bmp_element[:programmeId])
+        #  puts "value of the key is #{key[0]}------------" 
+        #  puts "value of the temp is #{temp}---------------"
+        #  puts "value of the id is #{$bmp_element[:programmeId]}--------------"
+        # end
+        # $bmp_element[:EmbedCode] = temp
         $bmp_element1["#{$bmp_element[:programmeId]}"] = $bmp_element
         $bmp_element = {}
+        # temp = {}
         flag = 0
       end
     end
+    # puts "#{$bmp_element1}"
     fail 'Ingestion Process faild because assets are not ingeted' unless $bmp_element1.include?(:assetIds)
-    check_data
+    #check_data
   end
 
   # This function will check data for any garbage value or removes programme ids which are not ingested completely.
@@ -193,9 +214,11 @@ class E2E
     thiz = thiz.gsub(%r{assetId="\d+_T"}, "assetId=\"#{replace}_T\"")
     thiz = thiz.gsub(%r{packageId="\d+"}, "packageId=\"#{replace}\"")
     thiz = thiz.gsub(%r{programmeId="\d+"}, "programmeId=\"#{replace}\"")
+    sleep(5)
     thiz = thiz.gsub(%r{showID="\d+"}, "showID=\"" + Time.now.strftime('%s') + "\"")
-    sleep(1)
+    sleep(5)
     thiz = thiz.gsub(%r{groupID="\d+"}, "groupID=\"" + Time.now.strftime('%s') + "\"")
+    sleep(5)
     thiz = thiz.gsub(%r{<SeasonNumber>\d+<\/SeasonNumber>}, '<SeasonNumber>' + rand(999).to_s + '</SeasonNumber>')
     thiz.gsub(%r{E2EAutomationAsset\w+_}) { |value| thiz = thiz.gsub(%r{<Title>E2EAutomationAsset\w+_\d+<\/Title>}, "<Title>#{value}#{replace}</Title>") }
     File.open("#{file}", 'w') do |file|

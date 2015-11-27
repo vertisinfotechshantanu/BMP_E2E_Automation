@@ -1,6 +1,6 @@
-ENV['PEM'] = './features/step_definitions/PemFile/FoxtelEBS-27.pem'
+ENV['PEM'] = ''
 ENV['Instance'] = ''
-ENV['User'] = 'ec2-user'
+ENV['User'] = ''
 ENV['API'] = ''
 ENV['Secret'] = ''
 ENV['LogFile'] = '/opt/ooyala/foxtel-ingestor/current/logs/log_orchestrator.txt'

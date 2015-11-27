@@ -1,38 +1,17 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <AssetExport xmlns="http://bigpondmovies.com/schemas/ccms/ingest/1/0" schemaVersion="1.0.1" origin="MPS" publishedDate="2015-07-08T04:52:09.581Z">
     <Header>
-        <ExhibitionWindow start="2005-01-01T00:00:00.000Z" end="2025-01-01T00:00:00.000Z" expiry="2025-01-01T00:00:00.000Z" offerType="PPV-Library"/>
+        <ExhibitionWindow start="2006-01-01T00:00:00" end="2025-01-01T00:00:00" expiry="2025-01-01T00:00:00" offerType="PPV-Library"/>
         <Terms>
             <Term type="TT_REF_001">
                 <Parameter name="rentalHours">48</Parameter>
             </Term>
         </Terms>
         <Destinations>
-            <Destination destinationID="bigpond_movies" deviceId="STBmanaged" accessTerm="TT_REF_001">
-                <Key name="Not_in_use"></Key>
-            </Destination>
-            <Destination destinationID="bigpond_movies" deviceId="STBunmanaged" accessTerm="TT_REF_001">
-                <Key name="Not_in_use"></Key>
-            </Destination>
             <Destination destinationID="bigpond_movies" deviceId="CEMediaPlayer" accessTerm="TT_REF_001">
                 <Key name="Not_in_use"></Key>
             </Destination>
             <Destination destinationID="bigpond_movies" deviceId="gameConsole" accessTerm="TT_REF_001">
-                <Key name="Not_in_use"></Key>
-            </Destination>
-            <Destination destinationID="bigpond_movies" deviceId="tablet" accessTerm="TT_REF_001">
-                <Key name="Not_in_use"></Key>
-            </Destination>
-            <Destination destinationID="bigpond_movies" deviceId="phone" accessTerm="TT_REF_001">
-                <Key name="Not_in_use"></Key>
-            </Destination>
-            <Destination destinationID="bigpond_movies" deviceId="pc_mac" accessTerm="TT_REF_001">
-                <Key name="Not_in_use"></Key>
-            </Destination>
-            <Destination destinationID="bigpond_movies" deviceId="pc_mac_play" accessTerm="TT_REF_001">
-                <Key name="Not_in_use"></Key>
-            </Destination>
-            <Destination destinationID="bigpond_movies" deviceId="connTV" accessTerm="TT_REF_001">
                 <Key name="Not_in_use"></Key>
             </Destination>
         </Destinations>
@@ -46,7 +25,7 @@
             <AspectRatio>16x9</AspectRatio>
             <Sound>Stereo</Sound>
             <Files base="">
-                <File bitrate="50000000" width="720" height="576" assetId="1446804008_T" filename="003.mxf" contentType="application/mxf" fileSize="25181680"/>
+                <File bitrate="50000000" width="720" height="576" assetId="1448360484_T" filename="003.mxf" contentType="application/mxf" fileSize="25181680"/>
             </Files>
         </Video>
     </Videos>
